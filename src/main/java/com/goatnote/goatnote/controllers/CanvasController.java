@@ -1,8 +1,9 @@
 package com.goatnote.goatnote.controllers;
 
-import javafx.event.ActionEvent;
+import com.goatnote.goatnote.models.CanvasModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,29 +13,24 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
-import java.io.File;
 import java.net.URL;
 import java.util.*;
 
 
-public class PaintController extends AnchorPane implements Initializable {
+public class CanvasController extends AnchorPane implements Initializable {
 
     @FXML
     private Canvas canvas;
-    @FXML
-    private Button eraser;
-    @FXML
-    private Button pencil;
+    private List<Point2D> path;
+    private WritableImage canvasImage;
+    private WritableImage snapshot;
+    private Stack<WritableImage> snapshots = new Stack<>();
 
-    WritableImage canvasImage;
-    WritableImage snapshot;
-    Stack<WritableImage> snapshots = new Stack<>();
-
+    private CanvasModel canvasModel = new CanvasModel();
     private GraphicsContext gc;
     private double cursorX, cursorY;
 
-    Boolean isPencil = true;
-
+/*
     private void mouseLaunch(MouseEvent mouseEvent){
         cursorX = mouseEvent.getX();
         cursorY = mouseEvent.getY();
@@ -51,6 +47,7 @@ public class PaintController extends AnchorPane implements Initializable {
     @FXML
     private void selectEraser(){
         snapshots.pop();
+
         // Clear the canvas
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -59,6 +56,7 @@ public class PaintController extends AnchorPane implements Initializable {
 
         System.out.println("Eraser selected");
     }
+*/
 
     @FXML
     @Override
@@ -69,20 +67,31 @@ public class PaintController extends AnchorPane implements Initializable {
         gc.setStroke(Color.BLACK);
 
         canvas.setOnMousePressed(mouseEvent -> {
-            /*canvasImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());*/
-            mouseLaunch(mouseEvent);
+            path = new ArrayList<>();
+            Point2D point = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+            path.add(point);
         });
 
         canvas.setOnMouseDragged(mouseEvent -> {
-            mouseAction(mouseEvent);
+            Point2D point = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+            path.add(point);
+            draw(path);
         });
 
         canvas.setOnMouseReleased(mouseEvent -> {
-            canvasImage = new WritableImage((int) 900, (int) 800);
+            canvasModel.addState(path);
+
+            /*canvasImage = new WritableImage((int) 900, (int) 800);
             snapshot = canvas.snapshot(new SnapshotParameters(), canvasImage);
             snapshots.push(snapshot);
-            System.out.println("bam");
+            System.out.println("bam");*/
         });
 
     }
+
+    private void draw(List<Point2D> path) {
+            Point2D startPoint = path.get(path.size() - 2);
+            Point2D endPoint = path.get(path.size()-1);
+            gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+        }
 }
