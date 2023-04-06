@@ -53,8 +53,10 @@ public class CanvasController extends AnchorPane implements Initializable {
 
     @FXML
     private void undoAction(){
-        canvasModel.undoState();
-        redrawState();
+        if(canvasModel.getStates().size() != 0){
+            canvasModel.undoState();
+            redrawState();
+        }
     }
 
     private void draw(List<Point2D> path) {
