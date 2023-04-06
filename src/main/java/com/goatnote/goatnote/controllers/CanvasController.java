@@ -4,12 +4,9 @@ import com.goatnote.goatnote.models.CanvasModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
@@ -21,42 +18,12 @@ public class CanvasController extends AnchorPane implements Initializable {
 
     @FXML
     private Canvas canvas;
-    private List<Point2D> path;
-    private WritableImage canvasImage;
-    private WritableImage snapshot;
-    private Stack<WritableImage> snapshots = new Stack<>();
+    @FXML
+    private Button undo;
 
+    private List<Point2D> path;
     private CanvasModel canvasModel = new CanvasModel();
     private GraphicsContext gc;
-    private double cursorX, cursorY;
-
-/*
-    private void mouseLaunch(MouseEvent mouseEvent){
-        cursorX = mouseEvent.getX();
-        cursorY = mouseEvent.getY();
-        gc.strokeLine(cursorX, cursorY, cursorX, cursorY);
-        System.out.println(cursorX + " ; " + cursorY);
-    }
-
-    private void mouseAction(MouseEvent mouseEvent){
-        gc.strokeLine(cursorX, cursorY, mouseEvent.getX(), mouseEvent.getY());
-        cursorX = mouseEvent.getX();
-        cursorY = mouseEvent.getY();
-    }
-
-    @FXML
-    private void selectEraser(){
-        snapshots.pop();
-
-        // Clear the canvas
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        // Draw the saved snapshot onto the canvas
-        gc.drawImage(snapshots.peek(), 0, 0);
-
-        System.out.println("Eraser selected");
-    }
-*/
 
     @FXML
     @Override
@@ -80,18 +47,31 @@ public class CanvasController extends AnchorPane implements Initializable {
 
         canvas.setOnMouseReleased(mouseEvent -> {
             canvasModel.addState(path);
-
-            /*canvasImage = new WritableImage((int) 900, (int) 800);
-            snapshot = canvas.snapshot(new SnapshotParameters(), canvasImage);
-            snapshots.push(snapshot);
-            System.out.println("bam");*/
         });
 
     }
 
+    @FXML
+    private void undoAction(){
+        canvasModel.undoState();
+        redrawState();
+    }
+
     private void draw(List<Point2D> path) {
             Point2D startPoint = path.get(path.size() - 2);
-            Point2D endPoint = path.get(path.size()-1);
+            Point2D endPoint = path.get(path.size() - 1);
             gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+    }
+
+    private void redrawState(){
+        gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
+
+        for (List<Point2D> path : canvasModel.getStates()){
+            for (int i = 1; i < path.size(); i += 1){
+                Point2D startPoint = path.get(i - 1);
+                Point2D endPoint = path.get(i);
+                gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+            }
         }
+    }
 }

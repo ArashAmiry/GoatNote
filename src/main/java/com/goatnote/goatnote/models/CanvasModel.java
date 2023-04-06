@@ -1,10 +1,6 @@
 package com.goatnote.goatnote.models;
 
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -14,5 +10,13 @@ public class CanvasModel {
 
     public void addState(List<Point2D> path){
         states.push(path);
+    }
+
+    public void undoState(){
+        states.pop();
+    }
+
+    public Stack<List<Point2D>> getStates(){
+        return states;
     }
 }
