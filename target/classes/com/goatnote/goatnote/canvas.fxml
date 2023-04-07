@@ -7,8 +7,8 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.goatnote.goatnote.controllers.CanvasController">
    <children>
       <Canvas fx:id="canvas" height="800.0" width="900.0" />
-      <Button fx:id="eraser" mnemonicParsing="false" prefHeight="28.0" prefWidth="105.0" text="Eraser" />
-      <Button fx:id="pencil" layoutX="105.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="105.0" text="Pencil" />
+      <Button fx:id="eraser" mnemonicParsing="false" onAction="#eraserActivated" prefHeight="28.0" prefWidth="105.0" text="Eraser" />
+      <Button fx:id="pencil" layoutX="105.0" mnemonicParsing="false" onAction="#pencilActivated" prefHeight="28.0" prefWidth="105.0" text="Pencil" />
       <Button fx:id="undo" layoutX="210.0" mnemonicParsing="false" onAction="#undoAction" prefHeight="28.0" prefWidth="105.0" text="Undo" />
    </children>
 </AnchorPane>

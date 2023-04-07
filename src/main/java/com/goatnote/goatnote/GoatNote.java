@@ -1,5 +1,6 @@
 package com.goatnote.goatnote;
 
+import com.goatnote.goatnote.models.Point;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
