@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 import java.net.URL;
 import java.util.*;
@@ -21,6 +22,7 @@ public class CanvasController extends AnchorPane implements Initializable {
     @FXML
     private Button undo;
 
+    private boolean isPencil = true;
     private List<Point2D> path;
     private CanvasModel canvasModel = new CanvasModel();
     private GraphicsContext gc;
@@ -46,7 +48,7 @@ public class CanvasController extends AnchorPane implements Initializable {
         });
 
         canvas.setOnMouseReleased(mouseEvent -> {
-            canvasModel.addState(path);
+                canvasModel.addState(new Pair<List<Point2D>, String>(path, gc.getStroke().toString()));
         });
 
     }
@@ -59,6 +61,16 @@ public class CanvasController extends AnchorPane implements Initializable {
         }
     }
 
+    @FXML
+    private void pencilActivated(){
+        gc.setStroke(Color.BLACK);
+    }
+
+    @FXML
+    private void eraserActivated(){
+        gc.setStroke(Color.rgb(244,244,244));
+    }
+
     private void draw(List<Point2D> path) {
             Point2D startPoint = path.get(path.size() - 2);
             Point2D endPoint = path.get(path.size() - 1);
@@ -68,10 +80,12 @@ public class CanvasController extends AnchorPane implements Initializable {
     private void redrawState(){
         gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
 
-        for (List<Point2D> path : canvasModel.getStates()){
-            for (int i = 1; i < path.size(); i += 1){
-                Point2D startPoint = path.get(i - 1);
-                Point2D endPoint = path.get(i);
+        for (Pair<List<Point2D>, String> path : canvasModel.getStates()){
+            gc.setStroke(Color.valueOf(path.getValue()));
+
+            for (int i = 1; i < path.getKey().size(); i += 1){
+                Point2D startPoint = path.getKey().get(i - 1);
+                Point2D endPoint = path.getKey().get(i);
                 gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
             }
         }
