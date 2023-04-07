@@ -19,10 +19,6 @@ public class GoatNote extends Application {
     }
 
     public static void main(String[] args) {
-        Point p1 = new Point(5,5);
-        Point p2 = new Point(9.99,5);
-        System.out.println(p1.intersect(p2));
-
         launch();
     }
 }

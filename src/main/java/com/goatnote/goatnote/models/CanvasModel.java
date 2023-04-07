@@ -8,9 +8,9 @@ import java.util.Stack;
 
 public class CanvasModel {
 
-    private Stack<Pair<List<Point2D>, String>> states = new Stack<>();
+    private Stack<Pair<List<Point>, String>> states = new Stack<>();
 
-    public void addState(Pair<List<Point2D>, String> path){
+    public void addState(Pair<List<Point>, String> path){
         states.push(path);
     }
 
@@ -18,7 +18,7 @@ public class CanvasModel {
         states.pop();
     }
 
-    public Stack<Pair<List<Point2D>, String>> getStates(){
+    public Stack<Pair<List<Point>, String>> getStates(){
         return states;
     }
 }

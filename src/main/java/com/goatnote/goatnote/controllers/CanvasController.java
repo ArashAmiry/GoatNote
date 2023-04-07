@@ -1,6 +1,7 @@
 package com.goatnote.goatnote.controllers;
 
 import com.goatnote.goatnote.models.CanvasModel;
+import com.goatnote.goatnote.models.Point;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -23,7 +24,7 @@ public class CanvasController extends AnchorPane implements Initializable {
     private Button undo;
 
     private boolean isPencil = true;
-    private List<Point2D> path;
+    private List<Point> path;
     private CanvasModel canvasModel = new CanvasModel();
     private GraphicsContext gc;
 
@@ -37,18 +38,33 @@ public class CanvasController extends AnchorPane implements Initializable {
 
         canvas.setOnMousePressed(mouseEvent -> {
             path = new ArrayList<>();
-            Point2D point = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+            Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
             path.add(point);
         });
 
         canvas.setOnMouseDragged(mouseEvent -> {
-            Point2D point = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+            Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
             path.add(point);
             draw(path);
         });
 
         canvas.setOnMouseReleased(mouseEvent -> {
-                canvasModel.addState(new Pair<List<Point2D>, String>(path, gc.getStroke().toString()));
+            if (!isPencil){
+                for (Pair<List<Point>, String> previousPath : canvasModel.getStates()){
+                    for (Point oldPoint : previousPath.getKey()){
+                        for (Point newPoint : path){
+                            if(newPoint.intersect(oldPoint)){
+                                canvasModel.addState(new Pair<>(path, gc.getStroke().toString()));
+                                return;
+                            }
+
+                        }
+                    }
+                }
+            }
+            else {
+                canvasModel.addState(new Pair<>(path, gc.getStroke().toString()));
+            }
         });
 
     }
@@ -58,20 +74,25 @@ public class CanvasController extends AnchorPane implements Initializable {
         if(canvasModel.getStates().size() != 0){
             canvasModel.undoState();
             redrawState();
+            if (!isPencil){
+                gc.setStroke(Color.rgb(244,244,244));
+            }
         }
     }
 
     @FXML
     private void pencilActivated(){
+        isPencil = true;
         gc.setStroke(Color.BLACK);
     }
 
     @FXML
     private void eraserActivated(){
+        isPencil = false;
         gc.setStroke(Color.rgb(244,244,244));
     }
 
-    private void draw(List<Point2D> path) {
+    private void draw(List<Point> path) {
             Point2D startPoint = path.get(path.size() - 2);
             Point2D endPoint = path.get(path.size() - 1);
             gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
@@ -80,12 +101,12 @@ public class CanvasController extends AnchorPane implements Initializable {
     private void redrawState(){
         gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
 
-        for (Pair<List<Point2D>, String> path : canvasModel.getStates()){
+        for (Pair<List<Point>, String> path : canvasModel.getStates()){
             gc.setStroke(Color.valueOf(path.getValue()));
 
             for (int i = 1; i < path.getKey().size(); i += 1){
-                Point2D startPoint = path.getKey().get(i - 1);
-                Point2D endPoint = path.getKey().get(i);
+                Point startPoint = path.getKey().get(i - 1);
+                Point endPoint = path.getKey().get(i);
                 gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
             }
         }
