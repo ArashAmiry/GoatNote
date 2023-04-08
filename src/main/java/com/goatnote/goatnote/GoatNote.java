@@ -5,7 +5,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 
+import java.io.File;
 import java.io.IOException;
 
 public class GoatNote extends Application {
@@ -19,6 +22,20 @@ public class GoatNote extends Application {
     }
 
     public static void main(String[] args) {
+        Tesseract tesseract = new Tesseract();
+
+        tesseract.setDatapath("C:\\Users\\Arash\\IdeaProjects\\GoatNote\\src\\main\\resources\\tessdata");
+        /*tesseract.setLanguage("equ");*/
+
+        File file = new File("C:\\Users\\Arash\\Desktop\\test.png");
+
+        try {
+            String text = tesseract.doOCR(file);
+            System.out.println(text);
+        } catch (TesseractException e){
+            System.out.println(e.getMessage());
+        }
+
         launch();
     }
 }

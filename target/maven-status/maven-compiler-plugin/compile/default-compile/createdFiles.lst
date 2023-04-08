@@ -1,3 +1,5 @@
-com\goatnote\goatnote\controllers\PaintController.class
+com\goatnote\goatnote\models\CanvasModel.class
+com\goatnote\goatnote\controllers\CanvasController.class
 module-info.class
 com\goatnote\goatnote\GoatNote.class
+com\goatnote\goatnote\models\Point.class
