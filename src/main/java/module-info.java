@@ -1,7 +1,8 @@
 module com.goatnote.goatnote {
     requires javafx.controls;
     requires javafx.fxml;
-    requires tess4j;
+    requires okhttp3;
+    requires org.json;
 
     opens com.goatnote.goatnote to javafx.fxml;
     exports com.goatnote.goatnote;

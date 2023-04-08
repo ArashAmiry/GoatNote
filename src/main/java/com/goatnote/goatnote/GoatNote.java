@@ -1,12 +1,12 @@
 package com.goatnote.goatnote;
 
-import com.goatnote.goatnote.models.Point;
+import com.goatnote.goatnote.models.CalculatoraAPI;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
+import okhttp3.Response;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -21,21 +21,8 @@ public class GoatNote extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-        Tesseract tesseract = new Tesseract();
-
-        tesseract.setDatapath("C:\\Users\\Arash\\IdeaProjects\\GoatNote\\src\\main\\resources\\tessdata");
-        /*tesseract.setLanguage("equ");*/
-
-        File file = new File("C:\\Users\\Arash\\Desktop\\test.png");
-
-        try {
-            String text = tesseract.doOCR(file);
-            System.out.println(text);
-        } catch (TesseractException e){
-            System.out.println(e.getMessage());
-        }
-
+    public static void main(String[] args) throws IOException {
+        Response response = CalculatoraAPI.calculateImage("asdasd");
         launch();
     }
 }
