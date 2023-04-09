@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class CalculatoraAPI {
 
-    public static Response calculateImage(String file ) throws IOException {
+    public static double calculateImage(String file) throws IOException {
         OkHttpClient client = new OkHttpClient();
         File imageFile = new File("C:\\Users\\Arash\\Desktop\\test1.jpg");
 
@@ -32,7 +32,7 @@ public class CalculatoraAPI {
 
         String responseBody = response.body().string();
         JSONObject jsonResponse = new JSONObject(responseBody);
-        int solution = jsonResponse.getJSONObject("result")
+        double solution = jsonResponse.getJSONObject("result")
                 .getJSONArray("groups")
                 .getJSONObject(0)
                 .getJSONArray("entries")
@@ -40,8 +40,8 @@ public class CalculatoraAPI {
                 .getJSONObject("preview")
                 .getJSONObject("content")
                 .getJSONObject("solution")
-                .getInt("value");
+                .getDouble("value");
 
-        return response;
+        return solution;
     }
 }
