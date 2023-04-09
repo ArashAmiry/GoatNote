@@ -24,7 +24,7 @@ public class CalculatoraAPI {
         Request request = new Request.Builder()
                 .url("https://photomath1.p.rapidapi.com/maths/solve-problem")
                 .post(body)
-                .addHeader("X-RapidAPI-Key", "085cb0c15emsh4c925ead20d1128p198881jsn83b6e7e9d9f7")
+                .addHeader("X-RapidAPI-Key", "YOUR API KEY")
                 .addHeader("X-RapidAPI-Host", "photomath1.p.rapidapi.com")
                 .build();
 
